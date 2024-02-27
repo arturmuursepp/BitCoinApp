@@ -10,6 +10,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml.Linq;
 
 namespace BitCoinApp
 {
@@ -19,24 +20,33 @@ namespace BitCoinApp
         {
             InitializeComponent();
         }
-
         private void btnGetRates_Click(object sender, EventArgs e)
         {
-            if (currencyCombo.SelectedItem.ToString() == "EUR")
+            int a;
+            if (currencyCombo.SelectedItem == null) { return;}
+            if (amountTextBox.Text == "") { return; }
+            if (Int32.TryParse(amountTextBox.Text, out a))
             {
-                resultLabel.Visible = true;
-                resultTextBox.Visible = true;
-                BitCoinRates bitcoin = GetRates();
-                float result = Int32.Parse(amountTextBox.Text) * bitcoin.bpi.EUR.rate_float;
-                resultTextBox.Text = $"{result.ToString()} {bitcoin.bpi.EUR.code}";
+                if (currencyCombo.SelectedItem.ToString() == "EUR")
+                {
+                    resultLabel.Visible = true;
+                    resultTextBox.Visible = true;
+                    BitCoinRates bitcoin = GetRates();
+                    float result = Int32.Parse(amountTextBox.Text) * bitcoin.bpi.EUR.rate_float;
+                    resultTextBox.Text = $"{result.ToString()} {bitcoin.bpi.EUR.code}";
+                }
+                else if (currencyCombo.SelectedItem.ToString() == "USD")
+                {
+                    resultLabel.Visible = true;
+                    resultTextBox.Visible = true;
+                    BitCoinRates bitcoin = GetRates();
+                    float result = Int32.Parse(amountTextBox.Text) * bitcoin.bpi.USD.rate_float;
+                    resultTextBox.Text = $"{result.ToString()} {bitcoin.bpi.USD.code}";
+                }
             }
-            else if (currencyCombo.SelectedItem.ToString() == "USD")
+            else
             {
-                resultLabel.Visible = true;
-                resultTextBox.Visible = true;
-                BitCoinRates bitcoin = GetRates();
-                float result = Int32.Parse(amountTextBox.Text) * bitcoin.bpi.USD.rate_float;
-                resultTextBox.Text = $"{result.ToString()} {bitcoin.bpi.USD.code}";
+                return;
             }
         }
 
